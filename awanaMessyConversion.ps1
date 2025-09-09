@@ -13,9 +13,36 @@ $cleaned = foreach ($row in $csv) {
     $p1 = $parents[0] -split ' ', 2
     $p2 = $parents[1] -split ' ', 2
 
-    # Extract only the phone number using regex and trim any trailing dash or space
-    $phone1 = if ($phones[0]) { ($phones[0] -match '^\s*([\(\)\d\s\-]+)') | Out-Null; $matches[1].Trim().TrimEnd('-',' ') } else { "" }
-    $phone2 = if ($phones[1]) { ($phones[1] -match '^\s*([\(\)\d\s\-]+)') | Out-Null; $matches[1].Trim().TrimEnd('-',' ') } else { "" }
+    $parent1Phone = ""
+    $parent2Phone = ""
+
+    foreach ($phone in $phones) {
+        if ($phone -match '^\s*([\(\)\d\s\-]+)\s*-\s*(.+)$') {
+            $number = $matches[1].Trim().TrimEnd('-',' ')
+            $owner = $matches[2].Trim()
+            if ($owner -like "*$($p1[0])*" -or $owner -like "*$($p1[1])*") {
+                $parent1Phone = $number
+            } elseif ($owner -like "*$($p2[0])*" -or $owner -like "*$($p2[1])*") {
+                $parent2Phone = $number
+            }
+        }
+    }
+
+    # Split address into components
+    $address = $row.'Address'
+    $address_line_1 = ""
+    $city = ""
+    $state = ""
+    $postal_code = ""
+
+    if ($address -match '^(.*)\s+([A-Za-z\s]+),\s*([A-Z]{2})\s*(\d{5}(?:-\d{4})?)$') {
+        $address_line_1 = $matches[1].Trim()
+        $city = $matches[2].Trim()
+        $state = $matches[3].Trim()
+        $postal_code = $matches[4].Trim()
+    } else {
+        $address_line_1 = $address
+    }
 
     [PSCustomObject]@{
         'member_external_id'    = $row.'Person Id'
@@ -28,12 +55,15 @@ $cleaned = foreach ($row in $csv) {
         'parent_1_first_name'   = $p1[0]
         'parent_1_last_name'    = $p1[1]
         'parent_1_email'        = $emails[0]
-        'parent_1_cell_phone'   = $phone1
+        'parent_1_cell_phone'   = $parent1Phone
         'parent_2_first_name'   = $p2[0]
         'parent_2_last_name'    = $p2[1]
         'parent_2_email'        = $emails[1]
-        'parent_2_cell_phone'   = $phone2
-        'address_line_1'        = $row.'Address'
+        'parent_2_cell_phone'   = $parent2Phone
+        'address_line_1'        = $address_line_1
+        'city'                  = $city
+        'state'                 = $state
+        'postal_code'           = $postal_code
     }
 }
 
