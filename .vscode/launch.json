@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "PowerShell: Run Messy Full",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": ".\\awanaMessyConversion.ps1",
+            "args": ["-InputPath", ".\\AwanaMessy.csv", "-OutputPath", ".\\AwanaParentsClean.csv"],
+        },
+        {
+            "name": "PowerShell: Run Messy abreviated",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": ".\\awanaMessyConversion.ps1",
+            "args": ["-InputPath", ".\\AwanaMessy.csv", "-OutputPath", ".\\AwanaParentsCleanAbreviated.csv", "-OldInputPath", ".\\AwanaMessyOld.csv"],
+        }
+    ]
+}
