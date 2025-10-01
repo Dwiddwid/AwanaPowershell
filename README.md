@@ -39,6 +39,7 @@ If you want to exclude records already present in a previous file:
 - Parent/guardian names, emails, and phone numbers are matched by name after the dash in the phone field.
 - If more than two parents/guardians are listed, only the first two (with phones prioritized) are used; others go into `non_parent_pickup`.
 - Address parsing expects two or more spaces before the city, and a comma before the state.
+- If the address does not fit the expected format, you will need to manually edit the record. Always check the output file to ensure the data is as expected.
 
 ## Example Input
 
